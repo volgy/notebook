@@ -66,6 +66,7 @@ server{
 $ sudo ln -s /etc/nginx/sites-available/notebook /etc/nginx/sites-enabled/
 $ sudo /etc/init.d/nginx reload
 ```
+### Ubutnu 14.04
 
 - Create a new upstart config file for Jupyter
 
@@ -97,4 +98,38 @@ end script
 
 ```
 $ sudo start notebook
+```
+
+
+### Ubutnu 16.04
+
+- Create a new systemd service unit for Jupyter
+
+```
+$ sudo vi /usr/lib/systemd/system/notebook.service
+```
+
+Contents of `/lib/systemd/system/notebook.service`:
+
+```
+[Unit]
+Description=Jupyter notebook service
+
+[Service]
+Type=simple
+PIDFile=/var/run/notebook.pid
+ExecStart=/opt/anaconda3/bin/jupyter notebook --no-browser
+User=volgy
+Group=volgy
+WorkingDirectory=/www/notebook
+
+[Install]
+WantedBy=multi-user.target
+```
+
+- Start the Jupyter service
+
+```
+$ sudo systemctl enable notebook
+$ sudo systemctl start notebook
 ```
