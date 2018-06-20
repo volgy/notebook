@@ -13,11 +13,17 @@ Understanding the world with Jupyter/IPython notebooks
 $ git clone git@github.com:volgy/notebook.git /www/notebook
 ```
 
+- Create defaul config and setup password
+
+```
+jupyter notebook --generate-config
+jupyter notebook password
+```
+
 - Setup reverse proxy
 
 ```
 sudo apt-get install apache2-utils nginx
-htpasswd -c /www/notebook/.htpasswd <http-username>
 sudo vi /etc/nginx/sites-available/notebook
 ```
 
@@ -86,7 +92,7 @@ respawn
 
 script
     echo $$ > /var/run/jupyter.pid
-    exec su -s /bin/sh -c 'exec "$0" "$@"' volgy -- /opt/anaconda3/bin/jupyter  notebook --no-browser --notebook-dir='/www/notebook'
+    exec su -s /bin/sh -c 'exec "$0" "$@"' volgy -- /opt/anaconda3/bin/jupyter  notebook --no-browser --notebook-dir='/www/notebook' --port=8888
 end script
 
 pre-stop script
@@ -118,7 +124,7 @@ Description=Jupyter notebook service
 [Service]
 Type=simple
 PIDFile=/var/run/notebook.pid
-ExecStart=/opt/anaconda3/bin/jupyter notebook --no-browser
+ExecStart=/opt/anaconda3/bin/jupyter notebook --no-browser --port=8888
 User=volgy
 Group=volgy
 WorkingDirectory=/www/notebook
